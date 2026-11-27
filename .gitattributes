@@ -1,0 +1,11 @@
+# Line endings: text files are stored and checked out with LF on every system, so a checkout on
+# Windows contains the same bytes as on Linux and macOS (e.g. the sample invoice XML that is
+# embedded into PDFs). Git detects binary files itself; the list below makes it explicit.
+* text=auto eol=lf
+
+*.ttf binary
+*.otf binary
+*.png binary
+*.jpg binary
+*.icc binary
+*.pdf binary

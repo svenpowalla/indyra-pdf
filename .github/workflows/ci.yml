@@ -1,0 +1,55 @@
+# Continuous integration: builds the solution and runs all tests on Linux, Windows and macOS
+# whenever something is pushed to main or a pull request is opened.
+#
+# Tests that need veraPDF or Mustang (PDF/A and ZUGFeRD validation) are skipped here, because
+# those tools are not installed on the GitHub runners. They run locally where the tools exist.
+#
+# On Linux the sample program also runs; its output (PDFs and the PNG previews rendered by
+# SkiaSharp on Linux) is kept as a downloadable artifact of the run for visual checks.
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:        # allows starting a run by hand in the "Actions" tab
+
+permissions:
+  contents: read            # the workflow only reads the repository
+
+jobs:
+  test:
+    name: Build and test (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false      # finish the other systems even if one fails
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+
+    steps:
+      - name: Check out
+        uses: actions/checkout@v5
+
+      - name: Install .NET 10
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Build
+        run: dotnet build --configuration Release
+
+      - name: Test
+        run: dotnet test --configuration Release --no-build --logger "console;verbosity=normal"
+
+      - name: Run sample program
+        if: runner.os == 'Linux'
+        run: dotnet run --project samples/IndyraPdf.Sample --configuration Release --no-build
+
+      - name: Keep sample output
+        if: runner.os == 'Linux'
+        uses: actions/upload-artifact@v4
+        with:
+          name: sample-output-linux
+          path: out/
+          retention-days: 14
