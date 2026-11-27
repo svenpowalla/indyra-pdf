@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\IndyraPdf\IndyraPdf.csproj" />
+    <ProjectReference Include="..\..\src\IndyraPdf.Skia\IndyraPdf.Skia.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <!-- Example program only, not published as a package. -->
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+</Project>
