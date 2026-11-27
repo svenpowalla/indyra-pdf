@@ -1,0 +1,38 @@
+<Project>
+  <!-- Settings shared by all projects of the solution (MSBuild reads this file automatically). -->
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <InvariantGlobalization>true</InvariantGlobalization>
+  </PropertyGroup>
+
+  <!-- Package metadata, used by "dotnet pack" for the NuGet packages IndyraPdf and IndyraPdf.Skia.
+       Versions below 1.0 signal that the public interface may still change. -->
+  <PropertyGroup>
+    <Version>0.1.0</Version>
+    <Authors>Indyra Software</Authors>
+    <Company>Indyra Software</Company>
+    <Copyright>Copyright (c) 2026 Indyra Software</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/svenpowalla/indyra-pdf</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/svenpowalla/indyra-pdf.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>pdf;pdf-a;pdfa-3;pdf-ua;zugferd;factur-x;xrechnung;e-invoice;truetype;layout;accessibility</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <!-- Source Link: debuggers can step into the exact source of the published version. -->
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+  </PropertyGroup>
+
+  <!-- The README of the repository is shown on the package page of nuget.org. The notices travel
+       with every copy, as the MIT licence of PDFsharp requires. Projects that are not packed
+       (tests, sample) ignore these items. -->
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)README.md" Pack="true" PackagePath="/" Visible="false" />
+    <None Include="$(MSBuildThisFileDirectory)THIRD-PARTY-NOTICES.md" Pack="true" PackagePath="/" Visible="false" />
+  </ItemGroup>
+</Project>

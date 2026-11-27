@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>IndyraPdf</RootNamespace>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageId>IndyraPdf</PackageId>
+    <Description>PDF library for .NET without dependencies: layout engine (paragraphs, tables, page templates), TrueType fonts with Unicode, subsetting and kerning, colour emoji, PNG/JPEG images, PDF/A-3, ZUGFeRD/Factur-X e-invoices and tagged PDF (PDF/UA-1, PDF/A-3a).</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="IndyraPdf.Tests" />
+    <!-- The preview needs the raw font files (TrueTypeFont.FileData) to create Skia typefaces. -->
+    <InternalsVisibleTo Include="IndyraPdf.Skia" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- sRGB colour profile of the ICC, used as PDF/A output intent (see Resources/sRGB2014.icc.LICENSE.txt). -->
+    <EmbeddedResource Include="Resources/sRGB2014.icc" LogicalName="IndyraPdf.sRGB2014.icc" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Output 2 of the layout engine: PNG previews with SkiaSharp (MIT). Separate project, so the
+       core library stays free of dependencies. -->
+  <PropertyGroup>
+    <RootNamespace>IndyraPdf.Skia</RootNamespace>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageId>IndyraPdf.Skia</PackageId>
+    <Description>PNG page previews for IndyraPdf documents with SkiaSharp: same line and page breaks as the PDF output.</Description>
+    <PackageTags>$(PackageTags);preview;png;skiasharp</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\IndyraPdf\IndyraPdf.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="SkiaSharp" Version="4.157.0" />
+    <!-- Native Skia library for Linux servers; needs no system fonts (fonts come from the documents). -->
+    <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="4.157.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="IndyraPdf.Tests" />
+  </ItemGroup>
+
+</Project>

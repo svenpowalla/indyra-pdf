@@ -1,0 +1,15 @@
+# Build output
+bin/
+obj/
+out/
+*.user
+.vs/
+.idea/
+TestResults/
+
+# macOS
+.DS_Store
+
+# Local working notes for the AI assistant (not part of the project)
+CLAUDE.md
+.claude/
