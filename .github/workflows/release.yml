@@ -1,0 +1,69 @@
+# Release: publishes the NuGet packages IndyraPdf and IndyraPdf.Skia to nuget.org.
+#
+# Starts when a version tag such as "v0.1.0" is pushed. The tag must match <Version> in
+# Directory.Build.props, otherwise the run stops before anything is published (packages on
+# nuget.org cannot be deleted, only hidden, so a wrong version must never get there).
+#
+# Login uses nuget.org "Trusted Publishing": GitHub issues a short-lived token for this
+# workflow (OpenID Connect), nuget.org checks it against a policy set up for this repository
+# and returns a temporary API key valid for about one hour. No API key is stored anywhere.
+# Requires the repository variable NUGET_USER (nuget.org user name; Settings → Secrets and
+# variables → Actions → Variables) and a Trusted Publishing policy on nuget.org naming this
+# repository and the file "release.yml".
+
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: read
+  id-token: write           # needed to request the OpenID Connect token for nuget.org
+
+jobs:
+  publish:
+    name: Publish to nuget.org
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out
+        uses: actions/checkout@v5
+
+      - name: Install .NET 10
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Check that the tag matches the version
+        shell: bash
+        run: |
+          version=$(sed -n 's:.*<Version>\(.*\)</Version>.*:\1:p' Directory.Build.props)
+          if [ "v$version" != "$GITHUB_REF_NAME" ]; then
+            echo "::error::Tag $GITHUB_REF_NAME does not match <Version>$version</Version> in Directory.Build.props."
+            exit 1
+          fi
+
+      - name: Build
+        run: dotnet build --configuration Release
+
+      - name: Test
+        run: dotnet test --configuration Release --no-build
+
+      - name: Pack
+        run: dotnet pack --configuration Release --no-build --output packages
+
+      - name: Log in to nuget.org (Trusted Publishing)
+        id: login
+        uses: NuGet/login@v1
+        with:
+          user: ${{ vars.NUGET_USER }}
+
+      - name: Publish
+        # Pushes the .nupkg files; the matching .snupkg symbol packages are found and pushed
+        # automatically. --skip-duplicate lets a re-run succeed if a package is already there.
+        run: >
+          dotnet nuget push "packages/*.nupkg"
+          --api-key ${{ steps.login.outputs.NUGET_API_KEY }}
+          --source https://api.nuget.org/v3/index.json
+          --skip-duplicate
